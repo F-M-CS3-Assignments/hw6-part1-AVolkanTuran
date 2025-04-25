@@ -3,10 +3,12 @@
 
 using namespace std;
 
+//Default constructor, empty RBT
 RedBlackTree::RedBlackTree(){
     root = nullptr;
 }
 
+//Constructor with only the root
 RedBlackTree::RedBlackTree(int newData){
     root = new RBTNode;
     root->data = newData;
@@ -14,7 +16,7 @@ RedBlackTree::RedBlackTree(int newData){
     numItems = 1;
 }
 
-
+//Copy constructor helper
 RBTNode* copyHelper(RBTNode* node){
     if(node==nullptr){
         return nullptr;
@@ -32,12 +34,13 @@ RBTNode* copyHelper(RBTNode* node){
     return copy;
 }
 
-
+//Copy constructor
 RedBlackTree::RedBlackTree(const RedBlackTree &rbt){
     root = copyHelper(rbt.root);
     numItems = rbt.numItems;
 }
 
+//Destroyer helper
 void DestroyHelper(RBTNode* node){
     if(node==nullptr){
         return;
@@ -48,16 +51,20 @@ void DestroyHelper(RBTNode* node){
     delete node;
 }
 
+//Destroyer, frees memory
 RedBlackTree::~RedBlackTree(){
     DestroyHelper(root);
 }
 
+//General Insert method
 void RedBlackTree::Insert(int newData){
+    //If the data is already in the tree throws an error
     if(Contains(newData)){
         throw invalid_argument("Data already exists.");
         return;
     }
 
+    //Creates a new node with the newData and inserts it in the correct place according to BST then fixes the colors for RBT
     RBTNode* node = new RBTNode;
     node->color = COLOR_RED;
     node->data = newData;
@@ -77,6 +84,7 @@ void RedBlackTree::Insert(int newData){
     numItems++;
 }
 
+//Checks if a node is already present in the tree
 bool RedBlackTree::Contains(int data) const{
     RBTNode* node = root;
     while(node!=nullptr){
@@ -93,6 +101,7 @@ bool RedBlackTree::Contains(int data) const{
     return false;
 }
 
+//Finds the minimum value in the tree
 int RedBlackTree::GetMin() const{
     RBTNode* node = root;
     while(node->left!=nullptr){
@@ -101,6 +110,7 @@ int RedBlackTree::GetMin() const{
     return node->data;
 }
 
+//Finds the maximum value in the tree
 int RedBlackTree::GetMax() const{
     RBTNode* node = root;
     while(node->right!=nullptr){
@@ -109,6 +119,7 @@ int RedBlackTree::GetMax() const{
     return node->data;
 }
 
+//Gives a string representation of the infix order of the tree (left, root, right)
 string RedBlackTree::ToInfixString(const RBTNode *n){
     string output = "";
 
@@ -134,6 +145,7 @@ string RedBlackTree::ToInfixString(const RBTNode *n){
     return output;
 }
 
+//Gives a string representation of the prefix order of the tree (root, left, right)
 string RedBlackTree::ToPrefixString(const RBTNode *n){
     string output = "";
 
@@ -159,6 +171,7 @@ string RedBlackTree::ToPrefixString(const RBTNode *n){
     return output;
 }
 
+//Gives a string representation of the postfix order of the tree (left, right, root)
 string RedBlackTree::ToPostfixString(const RBTNode *n){
     string output = "";
 
@@ -184,7 +197,7 @@ string RedBlackTree::ToPostfixString(const RBTNode *n){
     return output;
 }
 
-
+//Basic Insert method to insert a node only according to the BST location without caring about the color properties
 void RedBlackTree::BasicInsert(RBTNode *node){
     RBTNode* curr = root;
     RBTNode* parent;
@@ -209,11 +222,14 @@ void RedBlackTree::BasicInsert(RBTNode *node){
     }
 }
 
+
+//Fixes the color order of the nodes above the newly inserted node
 void RedBlackTree::InsertFixUp(RBTNode *node){
     RBTNode *parent = node->parent;
     RBTNode *uncle = GetUncle(node);
     RBTNode *grandparent = parent->parent;
 
+    //Cases where the uncle is black (null nodes are also black)
     if(uncle == nullptr || uncle->color == COLOR_BLACK){
         if(grandparent != nullptr){
             grandparent->color = COLOR_RED;
@@ -242,7 +258,8 @@ void RedBlackTree::InsertFixUp(RBTNode *node){
             throw invalid_argument("Impossible state.");
         }
     }
-    else if(uncle!=nullptr && uncle->color==COLOR_RED){
+    //Cases where the uncle is red
+    else if(uncle->color==COLOR_RED){
         parent->color = COLOR_BLACK;
         uncle->color = COLOR_BLACK;
 
@@ -259,6 +276,7 @@ void RedBlackTree::InsertFixUp(RBTNode *node){
     }
 }
 
+//Finds and returns the uncle node
 RBTNode *RedBlackTree::GetUncle(RBTNode *node) const{
     RBTNode* grandparent = node->parent->parent;
     if(grandparent->left==nullptr || grandparent->right==nullptr){
@@ -271,6 +289,7 @@ RBTNode *RedBlackTree::GetUncle(RBTNode *node) const{
     return grandparent->left;
 }
 
+//Checks if the node is the left child of the parent
 bool RedBlackTree::IsLeftChild(RBTNode *node) const{
     if(node->parent->left==nullptr){
         return false;
@@ -281,6 +300,8 @@ bool RedBlackTree::IsLeftChild(RBTNode *node) const{
     }
     return false;
 }
+
+//Checks if the node is right child of the parent
 bool RedBlackTree::IsRightChild(RBTNode *node) const{
     if(node->parent->right==nullptr){
         return false;
@@ -292,6 +313,9 @@ bool RedBlackTree::IsRightChild(RBTNode *node) const{
     return false;
 }
 
+//Performs a left rotate on the node
+//The node's right child comes to the location of the node, and the node becomes the left child of its right child
+//The subtree of the right child is also fixed accordingly
 void RedBlackTree::LeftRotate(RBTNode *node){
     RBTNode* parent = node->parent;
     RBTNode* rChild = node->right;
@@ -324,6 +348,9 @@ void RedBlackTree::LeftRotate(RBTNode *node){
     }
 }
 
+//Performs a right rotate on the node
+//The node's left child comes to the location of the node, and the node becomes the right child of its left child
+//The subtree of the left child is also fixed accordingly
 void RedBlackTree::RightRotate(RBTNode *node){
     RBTNode* parent = node->parent;
     RBTNode* lChild = node->left;

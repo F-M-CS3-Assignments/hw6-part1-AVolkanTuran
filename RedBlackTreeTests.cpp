@@ -86,8 +86,22 @@ void TestInsertThirdNode(){
 void TestInsertFourthNode(){
 	cout << "Testing Insert Fourth Node..." << endl;
 
-	cout << "TESTS MISSING" << endl << endl;
-	
+	RedBlackTree *rbt = new RedBlackTree();
+	rbt->Insert(30);
+	rbt->Insert(15);
+	rbt->Insert(10);
+	rbt->Insert(5);
+	assert(rbt->ToPrefixString() == " B15  B10  R5  B30 ");
+	delete rbt;
+
+	rbt = new RedBlackTree();
+	rbt->Insert(30);
+	rbt->Insert(45);
+	rbt->Insert(60);
+	rbt->Insert(50);
+	assert(rbt->ToPrefixString() == " B45  B30  B60  R50 ");
+	delete rbt;
+
 	cout << "PASSED!" << endl << endl;
 }
 
@@ -103,7 +117,14 @@ void TestInsertFifthNode(){
 	assert(rbt->ToPrefixString() == " B30  B15  R10  R25  B45 ");
 	delete rbt;
 	
-	cout << "TESTS MISSING" << endl << endl;
+	rbt = new RedBlackTree();
+	rbt->Insert(50);
+	rbt->Insert(25);
+	rbt->Insert(75);
+	rbt->Insert(60);
+	rbt->Insert(80);
+	assert(rbt->ToPrefixString() == " B50  B25  B75  R60  R80 ");
+	delete rbt;
 	
 	cout << "PASSED!" << endl << endl;
 }
@@ -220,8 +241,20 @@ void TestContains(){
 	assert(rbt->Contains(34));
 	delete rbt;
 
-	
-	cout << "TESTS MISSING" << endl << endl;
+	rbt = new RedBlackTree();
+	rbt->Insert(10);
+	rbt->Insert(20);
+	rbt->Insert(5);
+	rbt->Insert(15);
+
+	assert(rbt->Contains(10));
+	assert(rbt->Contains(5));
+	assert(rbt->Contains(20));
+	assert(rbt->Contains(15));
+	assert(!rbt->Contains(0));
+	assert(!rbt->Contains(100));
+	delete rbt;
+
 	cout << "PASSED!" << endl << endl;
 }
 
@@ -231,13 +264,56 @@ void TestContains(){
 void TestGetMinimumMaximum(){
 	cout << "Testing Get Minimum and Get Maximum..." << endl;
 
-	cout << "TESTS MISSING" << endl << endl;
+	RedBlackTree* rbt = new RedBlackTree();
+	rbt->Insert(30);
+	rbt->Insert(10);
+	rbt->Insert(50);
+	rbt->Insert(5);
+	rbt->Insert(70);
+	rbt->Insert(20);
+
+	assert(rbt->GetMin() == 5);
+	assert(rbt->GetMax() == 70);
+	delete rbt;
 
 	cout << "PASSED!" << endl << endl;
 }
 
 
+void TestRBT50Nodes(){
+	cout << "Testing Insertion of Many Nodes..." << endl;
 
+	int values[50] = {
+	    50, 25, 75, 10, 35, 60, 90, 5, 15, 30,
+	    40, 55, 65, 80, 95, 3, 8, 13, 18, 28,
+	    33, 38, 45, 53, 58, 63, 68, 78, 85, 93,
+	    1, 4, 7, 11, 14, 16, 29, 26, 31, 36,
+	    43, 47, 52, 56, 61, 66, 70, 82, 88, 99
+	};
+
+	RedBlackTree *rbt = new RedBlackTree();
+
+	for (int i = 0; i < 50; i++) {
+		rbt->Insert(values[i]);
+	}
+
+	//Checks contains for each of the values and a value that isn't in the tree
+	for (int i = 0; i < 50; i++) {
+		assert(rbt->Contains(values[i]));
+	}
+	assert(!rbt->Contains(10000));
+
+	//Checks the min and max methods
+	assert(rbt->GetMin() == 1);
+	assert(rbt->GetMax() == 99);
+
+	string result = " B50  R25  B10  R5  B3  R1  R4  B8  R7  R15  B13  R11  R14  B18  R16  B35  R30  B28  R26  R29  B33  R31  R40  B38  R36  B45  R43  R47  R75  B60  R55  B53  R52  B58  R56  R65  B63  R61  B68  R66  R70  B90  R80  B78  B85  R82  R88  B95  R93  R99 ";
+	assert(rbt->ToPrefixString()==result);
+
+	delete rbt;
+
+	cout << "PASSED!" << endl << endl;
+}
 
 
 int main(){
@@ -259,6 +335,7 @@ int main(){
 
 	TestContains();
 	TestGetMinimumMaximum();
+	TestRBT50Nodes();
 
 	
 	cout << "ALL TESTS PASSED!!" << endl;

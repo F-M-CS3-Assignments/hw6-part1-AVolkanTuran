@@ -27,6 +27,7 @@ class RedBlackTree {
 		RedBlackTree();
 		RedBlackTree(int newData);
 		RedBlackTree(const RedBlackTree &rbt);
+		~RedBlackTree();
 
 		string ToInfixString() const {return ToInfixString(root);};
 		string ToPrefixString() const { return ToPrefixString(root);};
@@ -48,9 +49,6 @@ class RedBlackTree {
 		static string ToPrefixString(const RBTNode *n);
 		static string ToPostfixString(const RBTNode *n);
 		
-		static string GetColorString(const RBTNode *n);
-		static string GetNodeString(const RBTNode *n);
-		
 		void BasicInsert(RBTNode *node);
 		void InsertFixUp(RBTNode *node);
 		
@@ -61,11 +59,6 @@ class RedBlackTree {
 		
 		void LeftRotate(RBTNode *node);
 		void RightRotate(RBTNode *node);
-		
-		RBTNode *CopyOf(const RBTNode *node);
-
-
-		RBTNode *Get(int data) const;
 
 };
 

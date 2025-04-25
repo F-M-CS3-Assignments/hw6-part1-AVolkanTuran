@@ -99,7 +99,7 @@ void TestInsertFifthNode(){
 	rbt->Insert(45);
 	rbt->Insert(10);
 	rbt->Insert(25);
-	//cout << "result: "  << rbt->ToPrefixString() << endl;
+	cout << "result: "  << rbt->ToPrefixString() << endl;
 	assert(rbt->ToPrefixString() == " B30  B15  R10  R25  B45 ");
 	delete rbt;
 	
